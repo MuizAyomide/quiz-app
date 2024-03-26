@@ -1,6 +1,6 @@
 const questions = [
     {
-        questions: 'Which is the largest animal in the world?',
+        question: 'Which is the largest animal in the world?',
         answers: [
             { text: 'Shark', correct: false},
             { text: 'Blue whale', correct: true},
@@ -10,26 +10,26 @@ const questions = [
         ]
     },
     {
-        questions: 'Which is the smallest country in the world?',
+        question: 'Which is the smallest country in the world?',
         answers: [
             { text: 'Vatican city', correct: true},
-            { text: 'Bhutan', correct: true},
+            { text: 'Bhutan', correct: false},
             { text: 'Nepal', correct: false},
             { text: 'Shri lanka', correct: false},
 
         ]
     },
     {
-        questions: 'Which is the largest desert in the world?',
+        question: 'Which is the largest desert in the world?',
         answers: [
             { text: 'Kalahari', correct: false},
-            { text: 'Gobi', correct: true},
+            { text: 'Gobi', correct: false},
             { text: 'Sahara', correct: false},
             { text: 'Antartica', correct: true},
 
         ]
     },{
-        questions: 'Which is the smallest continent in the world?',
+        question: 'Which is the smallest continent in the world?',
         answers: [
             { text: 'Asia', correct: false},
             { text: 'Australia', correct: true},
@@ -83,14 +83,48 @@ function resetState(){
 
 
 function selectAnswer(e){
-    const selectBtn = e.target;
+    const selectedBtn = e.target;
     const isCorrect = selectedBtn.dataset.correct === 'true';
     if(isCorrect){
-        selectBtn.classList.add('correct');
+        selectedBtn.classList.add('correct');
+        score++;
     }
     else{
-        selectBtn.classList.add('incorrect');
+        selectedBtn.classList.add('incorrect');
     }
+    Array.from(answerButton.children).forEach(button =>{
+        if (button.dataset.correct === 'true'){
+            button.classList.add('correct');
+        }
+        button.disabled = true;
+    });
+    nextButton.style.display = 'block';
     }
+
+
+    function showScore(){
+        resetState();
+        questionElement.innerHTML = `you scored ${score} out of ${questions.length}!`;
+        nextButton.innerHTML = 'Play Again';
+        nextButton.style.display = 'block';
+    }
+
+    function handleNextButton(){
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.length){
+            showQuestion();
+        }else{
+            showScore();
+        }
+    }
+
+    nextButton.addEventListener('click', ()=>{
+        if(currentQuestionIndex < questions.length){
+            handleNextButton();
+        }
+        else{
+            startQuiz();
+        }
+    })
 
 startQuiz();
